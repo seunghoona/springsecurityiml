@@ -35,7 +35,7 @@ public class UserDetailsService implements org.springframework.security.core.use
 
 	private Collection<? extends GrantedAuthority> addAuthorities(Account account) {
 		Set<GrantedAuthority> grantedAuthority = new HashSet<>();
-		grantedAuthority.add(new SimpleGrantedAuthority(account.getRole()));
+		grantedAuthority.add(new SimpleGrantedAuthority(String.valueOf(account.getRole())));
 		return Collections.unmodifiableSet(grantedAuthority);
 	}
 }

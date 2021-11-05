@@ -17,19 +17,24 @@ public class Account {
 	@Id
 	@GeneratedValue
 	private Long id;
+
 	@Column
 	@Getter(value = AccessLevel.PACKAGE)
 	private String username;
+
 	@Embedded
 	@Getter(value = AccessLevel.PACKAGE)
 	private Password password;
+
 	@Column
 	private String email;
+
 	@Column
 	private String age;
-	@Column
-	@Getter(value = AccessLevel.PACKAGE)
-	private String role;
+
+	@Getter(value = AccessLevel.PUBLIC)
+	@Embedded
+	private Role role;
 
 	public Account(AccountDto accountDto, PasswordService passwordService) {
 		this.id = accountDto.getId();
@@ -37,7 +42,7 @@ public class Account {
 		this.password = passwordService.encode(new Password(accountDto.getPassword()));
 		this.email = accountDto.getEmail();
 		this.age = accountDto.getAge();
-		this.role = accountDto.getRole();
+		this.role = new Role(accountDto.getRole());
 	}
 
 }
