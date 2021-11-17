@@ -79,3 +79,42 @@ public final class PasswordEncoderFactories {
 ### 질문
 1. ValueObject 와 entity에서의 객체지향 설계뿐만아니라 dto도 그런식으로 설계가 가능하지 않을까?
 2. 변경되지 않는 메소드가 있는경우 
+
+## AuthenticationProvider 만들기 
+1. ProviderManager에서 생성 객체를사용하는 확인해보자
+
+### 설정 
+```java
+	@Override
+	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+    	/*auth.userDetailsService()*/
+		auth.authenticationProvider(authenticationProvider());
+	}
+
+	@Bean
+	public AuthenticationProvider authenticationProvider() {
+		return new CustomAuthenticationProvider();
+	}
+```
+
+### UsernamePasswordAuthenticationToken
+1. 사용자가 인증을 처음 시도할 때 `인증필터`가 사용자의 아이디와 패스워드를 만드는 객체
+```java
+public UsernamePasswordAuthenticationToken(Object principal, Object credentials) {
+	super(null);
+	this.principal = principal;
+	this.credentials = credentials;
+	setAuthenticated(false);
+}
+```
+
+1. 최종적으로 인증이 성공한 이유의 권한정보까지 포함하여 리턴한다.
+```java
+public UsernamePasswordAuthenticationToken(Object principal, Object credentials,
+    Collection<? extends GrantedAuthority> authorities) {
+    super(authorities);
+    this.principal = principal;
+    this.credentials = credentials;
+    super.setAuthenticated(true); // must use super, as we override
+}
+```

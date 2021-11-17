@@ -15,4 +15,7 @@ public class AccountContext extends User {
 		super(account.getUsername(), String.valueOf(account.getPassword()), authorities);
 	}
 
+	public Account getAccount() {
+		return account;
+	}
 }
