@@ -31,4 +31,9 @@ public class UserContoller {
 		userService.createUser(accountDto);
 		return "redirect:/";
 	}
+
+	@GetMapping("/login")
+	public String login() {
+		return "login";
+	}
 }

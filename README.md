@@ -118,3 +118,21 @@ public UsernamePasswordAuthenticationToken(Object principal, Object credentials,
     super.setAuthenticated(true); // must use super, as we override
 }
 ```
+
+## 커스텀 로그인 페이지 만들기 
+1. CSRF를 disabled 하지 않으면 해당 페이지로 요청이 들어갈 수 없게된다. 
+```html
+ <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+````
+
+```html
+ <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+````
+
+```java
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
+
+<form id="loginForm" name="loginForm">
+    <sec:csrfInput />
+</form>
+```

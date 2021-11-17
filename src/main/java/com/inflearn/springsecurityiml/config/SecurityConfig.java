@@ -19,7 +19,7 @@ import com.inflearn.springsecurityiml.provider.CustomAuthenticationProvider;
 import lombok.RequiredArgsConstructor;
 
 @Configuration
-@EnableWebSecurity
+@EnableWebSecurity(debug = true)
 @RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
@@ -43,13 +43,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 		http
 			.authorizeRequests()
-			.antMatchers("/","/users").permitAll()
+			.antMatchers("/", "/users").permitAll()
 			.antMatchers("/mypage").hasRole("USER")
 			.antMatchers("/messages").hasRole("MANAGER")
 			.antMatchers("/admin").hasRole("ADMIN")
 			.anyRequest().authenticated()
 		.and()
-			.formLogin();
+			.formLogin()
+			.loginPage("/login")
+			.loginProcessingUrl("/doLogin")
+			.defaultSuccessUrl("/")
+			.permitAll();
 
 	}
 

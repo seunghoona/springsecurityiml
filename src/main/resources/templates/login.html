@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+  <title>Document</title>
+  <style>
+    * {
+      margin: 0px;
+      padding: 0px;
+      text-decoration: none;
+      font-family: sans-serif;
+
+    }
+
+    body {
+      background: linear-gradient(125deg, #050000, #313164, #3e7c7c);
+      background-color: black;
+      color: white;
+    }
+
+    .loginForm {
+      position: absolute;
+      width: 500px;
+      height: 400px;
+      padding: 30px;
+      text-align: center;
+      top: 60%;
+      left: 50%;
+      transform: translate(-50%, -70%);
+      border-radius: 15px;
+    }
+
+    .loginForm h2 {
+      text-align: center;
+      margin: 30px;
+    }
+
+    .join-input {
+      border: 2px solid #adadad;
+      margin: 50px;
+      padding: 10px 10px;
+    }
+
+    .input-style {
+      width: 100%;
+      border: none;
+      outline: none;
+      color: #636e72;
+      font-size: 16px;
+      height: 25px;
+      background: none;
+      display: inline-block;
+    }
+
+    .btn-row {
+      position: relative;
+      left: -20%;
+    }
+
+    .btn {
+      position: relative;
+      left: 40%;
+      transform: translateX(-50%);
+      margin-bottom: 40px;
+      width: 40%;
+      height: 40px;
+      background: linear-gradient(125deg, #3a6464, #5d5885, #181a1a);
+      background-position: left;
+      background-size: 200%;
+      color: white;
+      font-weight: bold;
+      border: none;
+      cursor: pointer;
+      transition: 0.4s;
+      display: inline;
+    }
+
+    .btn:hover {
+      background-position: right;
+    }
+
+    .bottomText {
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+<form th:action="@{/doLogin}" method="post" class="loginForm">
+  <h2>Login</h2>
+  <div class="join-input">
+    <input type="text"  name="username" class="input-style" placeholder="아이디를 입력해주세요" required="required" autofocus="autofocus">
+  </div>
+  <div class="join-input">
+    <input type="password" name="password" class="input-style" placeholder="패스워드를 입력해주세요">
+  </div>
+  <div class="btn-row">
+    <input type="submit" value="로그인1">
+    <button type="button" class="btn" onclick="button()">
+      로그인
+    </button>
+    <button type="button" class="btn" onclick="button()">
+      회원가입
+    </button>
+  </div>
+
+</form>
+</body>
+
+</html>
