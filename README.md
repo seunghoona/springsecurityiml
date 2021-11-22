@@ -80,9 +80,12 @@ public final class PasswordEncoderFactories {
 1. ValueObject 와 entity에서의 객체지향 설계뿐만아니라 dto도 그런식으로 설계가 가능하지 않을까?
 2. 변경되지 않는 메소드가 있는경우 
 
-## AuthenticationProvider 만들기 
-1. ProviderManager에서 생성 객체를사용하는 확인해보자
+## AuthenticationProvider 만들기
 
+1. 프로세스 
+   ![img.png](src/main/resources/img/1-1.png)
+
+2. ProviderManager에서 생성 객체를사용하는 확인해보자
 ### 설정 
 ```java
 	@Override
@@ -120,6 +123,8 @@ public UsernamePasswordAuthenticationToken(Object principal, Object credentials,
 ```
 
 ## 커스텀 로그인 페이지 만들기 
+![img.png](src/main/resources/img/2-1.png)
+
 1. CSRF를 disabled 하지 않으면 해당 페이지로 요청이 들어갈 수 없게된다. 
 ```html
  <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
@@ -143,11 +148,30 @@ public UsernamePasswordAuthenticationToken(Object principal, Object credentials,
 
 ```java
     @GetMapping("/logout")
-    public void logout(HttpServletRequest request, HttpServletResponse response) {
+    public String logout(HttpServletRequest request, HttpServletResponse response) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if (authentication != null) {
             new SecurityContextLogoutHandler().logout(request, response, authentication);
         }
+        return "redirect:/";
     }
 ```
+
+## WebAuthenticationDetails, AuthenticationDetailsSource
+Authentication 객체는 `details`를 가지고 있다.
+details는 `WebAuthenticationDetails` 인데 `WebAuthenticationDetails` 생성을 `AuthenticationDetailsSource`가 생성한다.
+
+![img.png](3-1.png)
+
+1. AuthenticationDetailsSource
+   - WebAuthenticationDetails 객체를 생성
+2. WebAuthenticationDetails
+   - 인증 과정 중 전달된 데이터를 저장 
+   - `Authentication` details 속성에 저장
+```java
+     request.getParamter("id");
+     request.getParamter("password")
+```
+   
+

@@ -86,6 +86,7 @@
 
 <body>
 <form th:action="@{/doLogin}" method="post" class="loginForm">
+  <input th:type="hidden" th:name="secret_key" th:value="secret">
   <h2>Login</h2>
   <div class="join-input">
     <input type="text"  name="username" class="input-style" placeholder="아이디를 입력해주세요" required="required" autofocus="autofocus">
