@@ -173,5 +173,67 @@ details는 `WebAuthenticationDetails` 인데 `WebAuthenticationDetails` 생성�
      request.getParamter("id");
      request.getParamter("password")
 ```
-   
+
+## 로그인 성공 
+
+```java
+public class CustomAuthSuccessHandler implements AuthenticationSuccessHandler {
+	private RequestCache requestCache = new HttpSessionRequestCache();
+	private RedirectStrategy redirectStratgy = new DefaultRedirectStrategy();
+	private final String DEFAULT_LOGIN_SUCCESS_URL = "/home";
+	
+	////////////////////////////////////////////////////////////////////////////////
+	//< public functions (override)
+
+	@Override
+	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
+		//< clear authentication error
+		clearAuthenticationAttributes(request);
+		//< redirect page
+		redirectStrategy(request, response, authentication);
+	}
+	
+	////////////////////////////////////////////////////////////////////////////////
+	//< private functions
+	
+	private void clearAuthenticationAttributes(HttpServletRequest request) {
+		HttpSession session = request.getSession(false);
+		if(session != null) {
+			session.removeAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
+		}
+	}
+	
+	private void redirectStrategy(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
+		//< get the saved request
+		SavedRequest savedRequest = requestCache.getRequest(request, response);
+		if(savedRequest == null) {
+			redirectStratgy.sendRedirect(request, response, DEFAULT_LOGIN_SUCCESS_URL);
+		}
+		else {
+			//< get the authorities
+			Set<String> roles = AuthorityUtils.authorityListToSet(authentication.getAuthorities());
+			if(roles.contains(ERole.ADMIN.getValue())) {
+				redirectStratgy.sendRedirect(request, response, "/home/admin");
+			}
+			else if(roles.contains(ERole.MANAGER.getValue())) {
+				redirectStratgy.sendRedirect(request, response, "/home/user");
+			}
+			else {
+				redirectStratgy.sendRedirect(request, response, "/home/guest");
+			}
+		}
+	}
+}
+
+```
+
+## 로그인 실패  
+
+1. UsernameNotFoundException : 계정 없음
+2. BadCredentialsException : 비밀번호 불일치
+3. AccountExpiredException : 계정만료
+4. CredentialExpiredException : 비밀번호 만료
+5. DisabledException : 계정 비활성화
+6. LockedException : 계정잠김
+
 

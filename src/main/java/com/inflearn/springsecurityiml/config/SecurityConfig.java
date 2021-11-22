@@ -21,10 +21,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import com.inflearn.springsecurityiml.provider.CustomAuthenticationProvider;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 
 @Configuration
-@EnableWebSecurity(debug = true)
+@EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
@@ -54,7 +55,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 		http
 			.authorizeRequests()
-			.antMatchers("/", "/users").permitAll()
+			.antMatchers("/", "/users","/login/**").permitAll()
 			.antMatchers("/mypage").hasRole("USER")
 			.antMatchers("/messages").hasRole("MANAGER")
 			.antMatchers("/admin").hasRole("ADMIN")
@@ -65,8 +66,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.loginProcessingUrl("/doLogin")
 			.defaultSuccessUrl("/")
 			.authenticationDetailsSource(authenticationDetailsSource())
+			.failureHandler(failureHandler())
 			.permitAll();
 
+	}
+
+	@Bean
+	public AuthenticationFailureHandler failureHandler() {
+		return new com.inflearn.springsecurityiml.handler.AuthenticationFailureHandler();
 	}
 
 	@Bean
