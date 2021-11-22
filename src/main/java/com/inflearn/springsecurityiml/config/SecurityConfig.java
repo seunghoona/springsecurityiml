@@ -1,8 +1,8 @@
 package com.inflearn.springsecurityiml.config;
 
 import com.inflearn.springsecurityiml.common.FormAuthenticationDetailsSource;
+import com.inflearn.springsecurityiml.handler.CustomAcessDeniedHandler;
 import javax.servlet.http.HttpServletRequest;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,14 +13,13 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.inflearn.springsecurityiml.provider.CustomAuthenticationProvider;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 
@@ -55,7 +54,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 		http
 			.authorizeRequests()
-			.antMatchers("/", "/users","/login/**").permitAll()
+			.antMatchers("/", "/users", "/login/**").permitAll()
 			.antMatchers("/mypage").hasRole("USER")
 			.antMatchers("/messages").hasRole("MANAGER")
 			.antMatchers("/admin").hasRole("ADMIN")
@@ -68,7 +67,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.authenticationDetailsSource(authenticationDetailsSource())
 			.failureHandler(failureHandler())
 			.permitAll();
+		http.exceptionHandling()
+			.accessDeniedHandler(accessDeniedHandler());
 
+	}
+
+	public AccessDeniedHandler accessDeniedHandler() {
+		CustomAcessDeniedHandler customAcessDeniedHandler = new CustomAcessDeniedHandler();
+		customAcessDeniedHandler.setErrorPage("/denied");
+		return customAcessDeniedHandler;
 	}
 
 	@Bean

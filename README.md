@@ -237,3 +237,10 @@ public class CustomAuthSuccessHandler implements AuthenticationSuccessHandler {
 6. LockedException : 계정잠김
 
 
+## 사용자 인증을 했지만 , 자원에 접근하는 경우 
+
+1. 인가 예외는 `ExceptionTranslateFilter`가 처리합니다.
+2. `FilterSecurityInterceptor`가 권한 예외를 발생 시켜서 다시 `ExceptionTranslateFilter`에게 위임
+
+
+## AJAX 인증 
