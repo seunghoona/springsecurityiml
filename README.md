@@ -136,3 +136,18 @@ public UsernamePasswordAuthenticationToken(Object principal, Object credentials,
     <sec:csrfInput />
 </form>
 ```
+
+## 로그아웃 
+
+1. 로그아웃 기능 추가 
+
+```java
+    @GetMapping("/logout")
+    public void logout(HttpServletRequest request, HttpServletResponse response) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication != null) {
+            new SecurityContextLogoutHandler().logout(request, response, authentication);
+        }
+    }
+```

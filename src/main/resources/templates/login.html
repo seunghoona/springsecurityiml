@@ -94,16 +94,24 @@
     <input type="password" name="password" class="input-style" placeholder="패스워드를 입력해주세요">
   </div>
   <div class="btn-row">
-    <input type="submit" value="로그인1">
-    <button type="button" class="btn" onclick="button()">
+    <button type="button" class="btn" onclick="btn_login()">
       로그인
     </button>
-    <button type="button" class="btn" onclick="button()">
+    <button type="button" class="btn" onclick="btn_join()">
       회원가입
     </button>
   </div>
-
 </form>
+<script>
+  function btn_login() {
+    let form = document.querySelector(".loginForm");
+    form.submit();
+  }
+
+  function btn_join() {
+    location.href = "http://localhost:8080/users";
+  }
+</script>
 </body>
 
 </html>
