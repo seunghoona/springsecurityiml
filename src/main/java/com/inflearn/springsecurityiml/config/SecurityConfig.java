@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationDetailsSource;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -23,6 +24,7 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 
+@Order(1)
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -67,13 +69,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .authenticationDetailsSource(authenticationDetailsSource())
             .failureHandler(failureHandler())
             .permitAll();
-        http.csrf().disable();
-
         http.exceptionHandling()
             .accessDeniedHandler(accessDeniedHandler());
-
-        http.addFilterBefore(ajaxLoginProcessingFilter(),
-            UsernamePasswordAuthenticationFilter.class);
 
     }
 
@@ -86,13 +83,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public AuthenticationFailureHandler failureHandler() {
         return new com.inflearn.springsecurityiml.handler.AuthenticationFailureHandler();
-    }
-
-    @Bean
-    public AJAXLoginProcessingFilter ajaxLoginProcessingFilter() throws Exception {
-        AJAXLoginProcessingFilter ajaxLoginProcessingFilter = new AJAXLoginProcessingFilter();
-        ajaxLoginProcessingFilter.setAuthenticationManager(authenticationManagerBean());
-        return ajaxLoginProcessingFilter;
     }
 
     @Bean
