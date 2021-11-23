@@ -265,3 +265,49 @@ public class CustomAuthSuccessHandler implements AuthenticationSuccessHandler {
 - 인증은 했지만 권한이 없는 경우 
 - accessDeniedHandler.handle로 처리합니다.
   
+
+## AJAX Custom DSLs 구현하기 
+
+# AbstractHttpConfigurer
+    - 스프링 시큐리티 초기화 설정 클래스
+    - 필터 핸들러 메소드 속성 등을 한 곳에 정의 하여 처리할 수 잇는 편리함 제공 
+1. 초기화
+public void init (H http);
+2. 설정
+public void configure(H http);
+3. 사용 
+HttpSecurity의 appli (configure) 사용
+
+
+
+## AJAx 로그인 구현 & csrf 설정 
+```html
+<meta id ="_csrf" name="_csrf" th:content="${_csrf.token}" />
+<meta id ="_csrf_header" name="_csrf_header" th:content="${_csrf_headerName}" />
+```
+```javascript
+$("meta[name="_csrf_header"]").attr('content');
+$("meta[name="_csrf"]").attr('content');
+
+$.ajax({
+  type: "post",
+  url: "/api/login",
+  data: JSON.stringify(data),
+  dataType : "json",
+  beforeSend : function (xhr) {
+    xhr.setRequestHeader(csrfHeader,csrfToken);
+    xhr.setRequestHeader("X-Requested","XMLHttpRequest");
+    xhr.setRequestHeader("Content-type","application/json");
+  },
+  success : function (data) {
+    location.href="/"
+  },
+  error : function(xhr, status, error) {
+    location.href = "/login?error=true&exception=" + xhr.responseText;
+  }
+  
+})
+
+
+
+```
