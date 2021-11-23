@@ -244,3 +244,14 @@ public class CustomAuthSuccessHandler implements AuthenticationSuccessHandler {
 
 
 ## AJAX 인증 
+
+![img_3-1.png](src/main/resources/img/3-1.png)
+
+1. AjaxAuthenticationFilter
+   - AbstractAuthenticationProcessingFilter 상속 
+     - form 인증처리도 이 클래스를 상속해서 구현하고 있다.
+   - 필터 작동 조건 
+      - AntPathRequestMatcher('/api/login') 로 요청정보와 매칭하고 요청 방식이 Ajax 이면 필터 작동 
+   - AjaxAuthenticationToken 생성하여 AuthenticationManager 에게 전달하여 인증처리 
+   - Filter 추가 
+     - http.addFilterBefore(AjaxAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
