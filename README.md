@@ -255,3 +255,13 @@ public class CustomAuthSuccessHandler implements AuthenticationSuccessHandler {
    - AjaxAuthenticationToken 생성하여 AuthenticationManager 에게 전달하여 인증처리 
    - Filter 추가 
      - http.addFilterBefore(AjaxAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
+
+
+2. AjaxLoginUrlAuthenticationEntryPoint
+- 인가 예외를 발생을 ExceptionTranslateFilter 처리 
+  - AuthenticationEntryPoint
+    - 인증을 받을 수 있도록 요청을처리 
+
+- 인증은 했지만 권한이 없는 경우 
+- accessDeniedHandler.handle로 처리합니다.
+  

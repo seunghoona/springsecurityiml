@@ -1,6 +1,8 @@
 package com.inflearn.springsecurityiml.config;
 
 import com.inflearn.springsecurityiml.ajax.AJAXLoginProcessingFilter;
+import com.inflearn.springsecurityiml.ajax.AjaxAccessDeniedHandler;
+import com.inflearn.springsecurityiml.ajax.AjaxLoginUrlAuthenticationEntryPoint;
 import com.inflearn.springsecurityiml.ajax.handler.AjaxAuthenticationFailureHandler;
 import com.inflearn.springsecurityiml.ajax.handler.AjaxAuthenticationSuccessHandler;
 import com.inflearn.springsecurityiml.ajax.provider.AjaxAuthenticationProvider;
@@ -13,6 +15,8 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -41,6 +45,20 @@ public class AjaxSecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.addFilterBefore(ajaxLoginProcessingFilter(),
             UsernamePasswordAuthenticationFilter.class);
+
+        http.exceptionHandling()
+            .authenticationEntryPoint(authenticationEntryPoint())
+            .accessDeniedHandler(ajaxAccessDeniedHandler());
+    }
+
+    @Bean
+    public AccessDeniedHandler ajaxAccessDeniedHandler() {
+        return new AjaxAccessDeniedHandler();
+    }
+
+    @Bean
+    public AuthenticationEntryPoint authenticationEntryPoint() {
+        return new AjaxLoginUrlAuthenticationEntryPoint();
     }
 
     @Bean
