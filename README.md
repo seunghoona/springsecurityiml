@@ -311,3 +311,46 @@ $.ajax({
 
 
 ```
+
+
+
+# 주요 인가 프로세스 인처리 
+
+1. 스프링 시큐리티의 인가처리 방법은 어떻게 동작할까?
+  - 사용자(인증정보)가 `/user`(요청정보)에 접근하기 위해서는 ROLE_User(권한정보) 권한이 필요하다
+
+![img_1.png](src/main/resources/img/4-1.png)
+
+
+2. 우리가 요청을 보게될 때 스프링 시큐리티는 `AccessDecisionManager`를 통해 인가처리를 하게됩니다.
+![img_1.png](src/main/resources/img/4-2.png)
+
+- Authentication `인증정보`는 SecurityContextHolder 안에 SecurityContext 로부터
+- FilterInvocation 로부터 `요청정보`
+- 권한정보는 `@SecurityConfig` 에서 설정한 권한정보를 각각 키(URL) value 권한정보 (hasRole("USER"))
+
+## ExpressionBasedFilterInvocationSecurityMetadataSource
+- 내부적으로 `Map`을 가지고 있다. 
+  - requestToExpressionAttributesMap 에 각각의 자원정보와 권한정보를 가지고 있다.
+- 실제 `@SecurityConfig` 에서 설정한 권한정보를 각각 키(URL) value 권한정보 (hasRole("USER"))
+
+## DefaultFilterInvocationSecurityMetadataSource
+- 실제 `저장된 정보를 추출`하여서 매칭되는 URL 정보를 탐색
+
+## 인가 FLOW
+----
+1. 로그인 요청 
+2. `FilterSecurityInvocation` 에서 `FilterInvocation` 을 통해 `요청정보`를 가져옵니다.
+3. 요청정보를 `AbstractSecurityInterceptor` 에서 권한정보를 `DefaultFilterInvocationSecurityMetaDataSource` 에서 정보를 요청합니다. 
+   - 이 때 해당 요청한 정보에 대한 정보와 매칭되는정보가 있는지 확인합니다.
+4. `AbstractSecurityInterceptor` 에서 `SecurityContext` 정보도 가지고옵니다. 
+5. 3개의 정보를 `accessDesisionManager`에게 위임하여 해당 정보에 대한 권한이 있는지 확입합니다.
+
+![img_1.png](src/main/resources/img/4-3.png/img_1.png)
+
+1. `FilterInvocationSecurityMetadataSource`
+   - URL 권한정보 추출 
+2. `MethodSecurityMetadataSource`
+   - Method 권한정보 추출 
+
+ 
