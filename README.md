@@ -353,4 +353,38 @@ $.ajax({
 2. `MethodSecurityMetadataSource`
    - Method 권한정보 추출 
 
- 
+# FilterInvocationSecurityMetadataSource
+
+![img_1.png](src/main/resources/img/5-1.png)
+
+1. 사용자가 접근하고자 하는 Url 자원에 대한 권한 정보를 추출 
+   - `UrlFilterInvocationSecurityMetaDataSource` 권한정보를 반환
+2. `AccessDecisionManager`에게 전달하여 인가처리 수행 
+3. DB로부터 자원 및 권한정보를 매핑하여 맵으로 관리 
+4. 사용자의 매 요청마다 요청정보에 매핑된 권한 정보 확인 
+
+## FilterInvocationSecurityMetaDataSource 
+
+![img_1.png](src/main/resources/img/5-2.png)
+
+1. 사용자 ADMIN 자원에 접근을 하려고하는 경우
+2. `FilterSecurityInterceptor` 권장정보를 조회
+   - FilterInvocationSecurityMetaDataSource 를 호출하여 `RequestMap` 에 매칭된 권한정보를 반환
+3. 반환된 정보를 `AccessDecisionManager`에게 위임 합니다.
+
+## 주의사항 
+- 두개 `FilterSecurityInterceptor`를 등록하더라도 내부적으로 이미 실행된 이력이 있다면 다음 FilterSecurityInterCeptor를 처리하지 않고 넘어간다.
+
+```java
+requestMap.put(
+    new RequestHeaderRequestMatcher("/mypage"),
+            asList(new SecurityConfig("ROLE_USER"))
+    );
+```
+
+## Map 기반 DB 연동 
+
+- `UrlResourceMapFactoryBean` 을 통해 DB로 부터 얻은 권한/자원 정보를 `RequestMap` 을 빈으로 생성해서 `UrlFilterInvocationSecurityMetaDatasource`로 전달
+
+![img_1.png](src/main/resources/img/5-3.png)
+

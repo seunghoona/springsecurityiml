@@ -1,15 +1,25 @@
 package com.inflearn.springsecurityiml.config;
 
-import com.inflearn.springsecurityiml.ajax.AJAXLoginProcessingFilter;
 import com.inflearn.springsecurityiml.common.FormAuthenticationDetailsSource;
+import com.inflearn.springsecurityiml.factory.SecurityResourceService;
+import com.inflearn.springsecurityiml.factory.UrlResourceMapFactoryBean;
 import com.inflearn.springsecurityiml.handler.CustomAcessDeniedHandler;
+import com.inflearn.springsecurityiml.metadatasource.UrlFilterInvocationSecurityMetaDatasource;
 import com.inflearn.springsecurityiml.provider.CustomAuthenticationProvider;
+import java.sql.CallableStatement;
+import java.util.Arrays;
+import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
+import org.springframework.security.access.AccessDecisionManager;
+import org.springframework.security.access.AccessDecisionVoter;
+import org.springframework.security.access.vote.AffirmativeBased;
+import org.springframework.security.access.vote.RoleVoter;
 import org.springframework.security.authentication.AuthenticationDetailsSource;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -20,8 +30,8 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 
 @Order(1)
@@ -29,6 +39,10 @@ import org.springframework.security.web.authentication.WebAuthenticationDetails;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+
+    @Autowired
+    private SecurityResourceService securityResourceService;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -69,8 +83,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .authenticationDetailsSource(authenticationDetailsSource())
             .failureHandler(failureHandler())
             .permitAll();
+
         http.exceptionHandling()
             .accessDeniedHandler(accessDeniedHandler());
+
+        http.addFilterBefore(customFilterSecurityInterceptor(), FilterSecurityInterceptor.class)
+        ;
+
 
     }
 
@@ -88,5 +107,37 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     protected PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public FilterSecurityInterceptor customFilterSecurityInterceptor() throws Exception {
+
+        FilterSecurityInterceptor filterSecurityInterceptor = new FilterSecurityInterceptor();
+        filterSecurityInterceptor.setSecurityMetadataSource(urlFilterInvocationSecurityMetaDatasource());
+        filterSecurityInterceptor.setAccessDecisionManager(affirmativeBased());
+        filterSecurityInterceptor.setAuthenticationManager(authenticationManagerBean());
+
+        return filterSecurityInterceptor;
+    }
+
+
+    private List<AccessDecisionVoter<?>> getAccessDecisionVoters() {
+        return Arrays.asList(new RoleVoter());
+    }
+
+    @Bean
+    public UrlFilterInvocationSecurityMetaDatasource urlFilterInvocationSecurityMetaDatasource()
+        throws Exception {
+        return new UrlFilterInvocationSecurityMetaDatasource(urlResourceMapFactoryBean().getObject());
+    }
+
+    @Bean
+    public AccessDecisionManager affirmativeBased() {
+        return new AffirmativeBased(getAccessDecisionVoters());
+    }
+
+    @Bean
+    public UrlResourceMapFactoryBean urlResourceMapFactoryBean() {
+        return new UrlResourceMapFactoryBean(securityResourceService);
     }
 }
