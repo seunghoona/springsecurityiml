@@ -346,7 +346,7 @@ $.ajax({
 4. `AbstractSecurityInterceptor` 에서 `SecurityContext` 정보도 가지고옵니다. 
 5. 3개의 정보를 `accessDesisionManager`에게 위임하여 해당 정보에 대한 권한이 있는지 확입합니다.
 
-![img_1.png](src/main/resources/img/4-3.png/img_1.png)
+![img_1.png](src/main/resources/img/4-3.png)
 
 1. `FilterInvocationSecurityMetadataSource`
    - URL 권한정보 추출 
@@ -471,3 +471,23 @@ public class PermitAllFilter extends FilterSecurityInterceptor {
 }
 
 ```
+
+### FilterSecurityInterceptor 전에 처리하기 위한 클래스변경
+
+```java
+    @Bean
+    public PermitAllFilter customFilterSecurityInterceptor() throws Exception {
+
+        PermitAllFilter filterSecurityInterceptor = new PermitAllFilter(PERMIT_ALL_URL);
+        filterSecurityInterceptor.setSecurityMetadataSource(urlFilterInvocationSecurityMetaDatasource());
+        filterSecurityInterceptor.setAccessDecisionManager(affirmativeBased());
+        filterSecurityInterceptor.setAuthenticationManager(authenticationManagerBean());
+
+        return filterSecurityInterceptor;
+    }
+```
+
+# URL 계층 권한 적용하기 
+- SpringSecurity 는 권한을 전부 가지고있어야만 권한을 가진다고한다. 하지만 상하 관계인 계층 처리를 하고자한다.
+
+![img_1.png](src/main/resources/img/7-1.png)

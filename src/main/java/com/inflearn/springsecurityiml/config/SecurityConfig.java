@@ -7,6 +7,7 @@ import com.inflearn.springsecurityiml.factory.UrlResourceMapFactoryBean;
 import com.inflearn.springsecurityiml.handler.CustomAcessDeniedHandler;
 import com.inflearn.springsecurityiml.metadatasource.UrlFilterInvocationSecurityMetaDatasource;
 import com.inflearn.springsecurityiml.provider.CustomAuthenticationProvider;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
@@ -18,7 +19,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.access.AccessDecisionManager;
 import org.springframework.security.access.AccessDecisionVoter;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.access.vote.AffirmativeBased;
+import org.springframework.security.access.vote.RoleHierarchyVoter;
 import org.springframework.security.access.vote.RoleVoter;
 import org.springframework.security.authentication.AuthenticationDetailsSource;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -122,11 +126,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return filterSecurityInterceptor;
     }
 
-
-    private List<AccessDecisionVoter<?>> getAccessDecisionVoters() {
-        return Arrays.asList(new RoleVoter());
-    }
-
     @Bean
     public UrlFilterInvocationSecurityMetaDatasource urlFilterInvocationSecurityMetaDatasource()
         throws Exception {
@@ -136,6 +135,24 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public AccessDecisionManager affirmativeBased() {
         return new AffirmativeBased(getAccessDecisionVoters());
+    }
+
+    private List<AccessDecisionVoter<?>> getAccessDecisionVoters() {
+
+        List<AccessDecisionVoter<? extends Object>> accessDecisionVoters = new ArrayList<>();
+
+        accessDecisionVoters.add(roleVoter());
+
+        return accessDecisionVoters;
+    }
+
+    @Bean
+    public AccessDecisionVoter<? extends Object> roleVoter() {
+        return new RoleHierarchyVoter(roleHierarchy());
+    }
+
+    public RoleHierarchy roleHierarchy() {
+        return new RoleHierarchyImpl();
     }
 
     @Bean

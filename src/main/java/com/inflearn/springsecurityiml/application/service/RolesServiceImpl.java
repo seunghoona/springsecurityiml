@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class RoleServiceImpl implements RolesService {
+public class RolesServiceImpl implements RolesService {
 
     private final RolesRepo roleRepository;
 
