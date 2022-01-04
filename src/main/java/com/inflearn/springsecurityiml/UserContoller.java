@@ -1,7 +1,5 @@
 package com.inflearn.springsecurityiml;
 
-import com.inflearn.springsecurityiml.domain.Account;
-import com.inflearn.springsecurityiml.domain.AccountContext;
 import com.inflearn.springsecurityiml.domain.AccountDto;
 import com.inflearn.springsecurityiml.service.UserService;
 import javax.servlet.http.HttpServletRequest;
@@ -34,7 +32,7 @@ public class UserContoller {
         return "user/login/register";
     }
 
-    @RequestMapping(value = "/login", method = {RequestMethod.GET,RequestMethod.POST})
+    @RequestMapping(value = "/login", method = {RequestMethod.GET, RequestMethod.POST})
     public String login(
         @RequestParam(required = false) String error,
         @RequestParam(required = false) String errorMessage, Model model) {
@@ -61,9 +59,9 @@ public class UserContoller {
     }
 
     @GetMapping("/denied")
-    public String accessDenied(@RequestParam(value = "exception", required = false) String exception, Model model){
+    public String accessDenied(
+        @RequestParam(value = "exception", required = false) String exception, Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        AccountContext AccountContext = (AccountContext) authentication.getPrincipal();
         model.addAttribute("exception", exception);
         return "user/login/denied";
     }

@@ -1,29 +1,36 @@
 package com.inflearn.springsecurityiml.domain;
 
+import java.util.HashSet;
+import java.util.Set;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
 public class Account {
 
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
 	@Column
-	@Getter(value = AccessLevel.PACKAGE)
 	private String username;
 
 	@Embedded
-	@Getter(value = AccessLevel.PACKAGE)
 	private Password password;
 
 	@Column
@@ -32,9 +39,13 @@ public class Account {
 	@Column
 	private String age;
 
-	@Getter(value = AccessLevel.PUBLIC)
 	@Embedded
 	private Role role;
+
+	@ManyToMany(fetch = FetchType.LAZY, cascade={CascadeType.ALL})
+	@JoinTable(name = "account_roles", joinColumns = { @JoinColumn(name = "user_id") }, inverseJoinColumns = {
+		@JoinColumn(name = "role_id") })
+	private Set<Roles> userRoles = new HashSet<>();
 
 	public Account(AccountDto accountDto, PasswordService passwordService) {
 		this.id = accountDto.getId();
@@ -44,5 +55,7 @@ public class Account {
 		this.age = accountDto.getAge();
 		this.role = new Role(accountDto.getRole());
 	}
+
+
 
 }

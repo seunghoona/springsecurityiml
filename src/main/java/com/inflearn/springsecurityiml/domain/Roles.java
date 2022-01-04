@@ -22,18 +22,16 @@ import lombok.ToString;
 
 @Entity
 @Table(name = "ROLE")
-@Data
-@ToString(exclude = {"accounts", "resourcesSet"})
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(of = "id")
 @Builder
 @Getter
+@EqualsAndHashCode(of = "id")
+@ToString(exclude = {"accounts", "resourcesSet"})
 public class Roles {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "role_id")
     private Long id;
 
     @Column(name = "role_name")
@@ -46,7 +44,11 @@ public class Roles {
     @OrderBy("orderNum desc")
     private Set<Resources> resourcesSet = new LinkedHashSet<>();
 
-    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "role")
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "userRoles")
     private Set<Account> accounts = new HashSet<>();
 
+    public Roles(String roleName, String roleDesc) {
+        this.roleName = roleName;
+        this.roleDesc = roleDesc;
+    }
 }
