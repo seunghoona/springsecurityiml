@@ -11,7 +11,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -19,13 +18,15 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
+import lombok.Setter;
 
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Table(name = "ROLE_HIERARCHY")
+@Setter
+@Builder
 public class RolesHierarchy implements Serializable {
 
     @Id
@@ -40,6 +41,7 @@ public class RolesHierarchy implements Serializable {
     private RolesHierarchy parentName;
 
     @OneToMany(mappedBy = "parentName", cascade = CascadeType.ALL)
+    @Builder.Default
     private Set<RolesHierarchy> roleHierarchies = new HashSet<>();
 
 }

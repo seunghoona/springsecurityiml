@@ -1,8 +1,11 @@
 package com.inflearn.springsecurityiml.factory;
 
+import com.inflearn.springsecurityiml.domain.AccessIP;
+import com.inflearn.springsecurityiml.domain.AccessIpRepo;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.SecurityConfig;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
@@ -13,9 +16,12 @@ import org.springframework.stereotype.Service;
 public class SecurityResourceService {
 
     private final ResourceRepository resourceRepository;
+    private final AccessIpRepo accessIpRepo;
 
-    public SecurityResourceService(ResourceRepository resourceRepository) {
+    public SecurityResourceService(ResourceRepository resourceRepository,
+        AccessIpRepo accessIpRepo) {
         this.resourceRepository = resourceRepository;
+        this.accessIpRepo = accessIpRepo;
     }
 
     public LinkedHashMap<RequestMatcher, List<ConfigAttribute>> getResourceList() {
@@ -29,5 +35,10 @@ public class SecurityResourceService {
                 });
             });
         return result;
+    }
+
+    public List<String> getAccessIp() {
+        return accessIpRepo.findAll()
+            .stream().map(AccessIP::getIpAddress).collect(Collectors.toList());
     }
 }

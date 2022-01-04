@@ -7,6 +7,7 @@ import com.inflearn.springsecurityiml.factory.UrlResourceMapFactoryBean;
 import com.inflearn.springsecurityiml.handler.CustomAcessDeniedHandler;
 import com.inflearn.springsecurityiml.metadatasource.UrlFilterInvocationSecurityMetaDatasource;
 import com.inflearn.springsecurityiml.provider.CustomAuthenticationProvider;
+import com.inflearn.springsecurityiml.voter.IpAddressVoter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -40,8 +41,9 @@ import org.springframework.security.web.authentication.WebAuthenticationDetails;
 
 @Order(1)
 @Configuration
-@EnableWebSecurity
+@EnableWebSecurity(debug = true)
 @RequiredArgsConstructor
+
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private static final String [] PERMIT_ALL_URL = {"/","login","/user/login/**"};
@@ -141,9 +143,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         List<AccessDecisionVoter<? extends Object>> accessDecisionVoters = new ArrayList<>();
 
+        accessDecisionVoters.add(accessIp());
         accessDecisionVoters.add(roleVoter());
 
         return accessDecisionVoters;
+    }
+
+    @Bean
+    public AccessDecisionVoter<? extends Object> accessIp() {
+        return new IpAddressVoter(securityResourceService);
     }
 
     @Bean

@@ -66,4 +66,9 @@ public class UserContoller {
         return "user/login/denied";
     }
 
+    @GetMapping("/messages")
+    public String accessDenied() {
+        return "user/messages";
+    }
+
 }

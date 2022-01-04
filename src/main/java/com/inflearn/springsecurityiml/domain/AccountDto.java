@@ -9,6 +9,6 @@ public class AccountDto {
 	private String username;
 	private String password;
 	private String email;
-	private String age;
+	private int age;
 	private String role;
 }

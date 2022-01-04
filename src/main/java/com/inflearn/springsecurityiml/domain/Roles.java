@@ -42,9 +42,11 @@ public class Roles {
 
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "roleSet")
     @OrderBy("orderNum desc")
+    @Builder.Default
     private Set<Resources> resourcesSet = new LinkedHashSet<>();
 
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "userRoles")
+    @Builder.Default
     private Set<Account> accounts = new HashSet<>();
 
     public Roles(String roleName, String roleDesc) {

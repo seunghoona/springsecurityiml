@@ -62,7 +62,6 @@ public class UrlFilterInvocationSecurityMetaDatasource implements
         LinkedHashMap<RequestMatcher, List<ConfigAttribute>> reloadedMap = resourceService.getResourceList();
 
         requestMap.clear();
-
         requestMap = reloadedMap;
     }
 }
