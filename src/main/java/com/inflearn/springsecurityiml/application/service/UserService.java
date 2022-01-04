@@ -1,8 +1,7 @@
-package com.inflearn.springsecurityiml.service;
+package com.inflearn.springsecurityiml.application.service;
 
 import com.inflearn.springsecurityiml.domain.Account;
 import com.inflearn.springsecurityiml.domain.AccountDto;
-import com.inflearn.springsecurityiml.service.dto.UserDto;
 import java.util.List;
 
 public interface UserService {

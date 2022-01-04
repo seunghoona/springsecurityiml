@@ -1,4 +1,4 @@
-package com.inflearn.springsecurityiml.service;
+package com.inflearn.springsecurityiml.application.service;
 
 import java.util.Collection;
 import java.util.Collections;

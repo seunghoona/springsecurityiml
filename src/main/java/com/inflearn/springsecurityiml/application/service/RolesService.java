@@ -1,4 +1,4 @@
-package com.inflearn.springsecurityiml.service;
+package com.inflearn.springsecurityiml.application.service;
 
 import com.inflearn.springsecurityiml.domain.Roles;
 import java.util.List;

@@ -1,7 +1,7 @@
-package com.inflearn.springsecurityiml;
+package com.inflearn.springsecurityiml.application;
 
 import com.inflearn.springsecurityiml.domain.AccountDto;
-import com.inflearn.springsecurityiml.service.UserService;
+import com.inflearn.springsecurityiml.application.service.UserService;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;

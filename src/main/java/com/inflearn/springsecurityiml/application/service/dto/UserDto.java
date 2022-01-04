@@ -1,4 +1,4 @@
-package com.inflearn.springsecurityiml.service.dto;
+package com.inflearn.springsecurityiml.application.service.dto;
 
 import java.util.List;
 import lombok.AllArgsConstructor;

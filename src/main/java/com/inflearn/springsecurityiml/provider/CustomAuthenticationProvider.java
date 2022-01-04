@@ -1,6 +1,5 @@
 package com.inflearn.springsecurityiml.provider;
 
-import com.inflearn.springsecurityiml.common.FormAuthenticationDetailsSource;
 import com.inflearn.springsecurityiml.common.FormWebAuthenctionDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -12,7 +11,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.inflearn.springsecurityiml.domain.AccountContext;
-import com.inflearn.springsecurityiml.service.UserDetailsService;
+import com.inflearn.springsecurityiml.application.service.UserDetailsService;
 
 public class CustomAuthenticationProvider implements AuthenticationProvider {
 

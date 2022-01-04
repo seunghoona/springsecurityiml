@@ -1,10 +1,9 @@
-package com.inflearn.springsecurityiml.service;
+package com.inflearn.springsecurityiml.application.service;
 
-import com.inflearn.springsecurityiml.service.dto.UserDto;
+import com.inflearn.springsecurityiml.application.service.dto.UserDto;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.modelmapper.ModelMapper;
-import org.springframework.stereotype.Service;
 
 import com.inflearn.springsecurityiml.annotation.DomainService;
 import com.inflearn.springsecurityiml.domain.Account;

@@ -1,12 +1,12 @@
 package com.inflearn.springsecurityiml.config;
 
 import com.inflearn.springsecurityiml.common.FormAuthenticationDetailsSource;
+import com.inflearn.springsecurityiml.factory.PermitAllFilter;
 import com.inflearn.springsecurityiml.factory.SecurityResourceService;
 import com.inflearn.springsecurityiml.factory.UrlResourceMapFactoryBean;
 import com.inflearn.springsecurityiml.handler.CustomAcessDeniedHandler;
 import com.inflearn.springsecurityiml.metadatasource.UrlFilterInvocationSecurityMetaDatasource;
 import com.inflearn.springsecurityiml.provider.CustomAuthenticationProvider;
-import java.sql.CallableStatement;
 import java.util.Arrays;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
@@ -40,9 +40,11 @@ import org.springframework.security.web.authentication.WebAuthenticationDetails;
 @RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+    private static final String [] PERMIT_ALL_URL = {"/","login","/user/login/**"};
 
     @Autowired
     private SecurityResourceService securityResourceService;
+
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -110,9 +112,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public FilterSecurityInterceptor customFilterSecurityInterceptor() throws Exception {
+    public PermitAllFilter customFilterSecurityInterceptor() throws Exception {
 
-        FilterSecurityInterceptor filterSecurityInterceptor = new FilterSecurityInterceptor();
+        PermitAllFilter filterSecurityInterceptor = new PermitAllFilter(PERMIT_ALL_URL);
         filterSecurityInterceptor.setSecurityMetadataSource(urlFilterInvocationSecurityMetaDatasource());
         filterSecurityInterceptor.setAccessDecisionManager(affirmativeBased());
         filterSecurityInterceptor.setAuthenticationManager(authenticationManagerBean());
@@ -128,7 +130,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public UrlFilterInvocationSecurityMetaDatasource urlFilterInvocationSecurityMetaDatasource()
         throws Exception {
-        return new UrlFilterInvocationSecurityMetaDatasource(urlResourceMapFactoryBean().getObject());
+        return new UrlFilterInvocationSecurityMetaDatasource(urlResourceMapFactoryBean().getObject(), securityResourceService);
     }
 
     @Bean

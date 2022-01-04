@@ -1,5 +1,6 @@
 package com.inflearn.springsecurityiml.metadatasource;
 
+import com.inflearn.springsecurityiml.factory.SecurityResourceService;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -16,9 +17,13 @@ public class UrlFilterInvocationSecurityMetaDatasource implements
 
     private LinkedHashMap<RequestMatcher, List<ConfigAttribute>> requestMap;
 
+    private SecurityResourceService resourceService;
+
     public UrlFilterInvocationSecurityMetaDatasource(
-        LinkedHashMap<RequestMatcher, List<ConfigAttribute>> requestMap) {
+        LinkedHashMap<RequestMatcher, List<ConfigAttribute>> requestMap,
+        SecurityResourceService resourceService) {
         this.requestMap = requestMap;
+        this.resourceService = resourceService;
     }
 
     @Override
@@ -51,5 +56,13 @@ public class UrlFilterInvocationSecurityMetaDatasource implements
     @Override
     public boolean supports(Class<?> clazz) {
         return FilterInvocation.class.isAssignableFrom(clazz);
+    }
+
+    public void reload() {
+        LinkedHashMap<RequestMatcher, List<ConfigAttribute>> reloadedMap = resourceService.getResourceList();
+
+        requestMap.clear();
+
+        requestMap = reloadedMap;
     }
 }

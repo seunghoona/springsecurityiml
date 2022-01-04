@@ -1,4 +1,4 @@
-package com.inflearn.springsecurityiml;
+package com.inflearn.springsecurityiml.application;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

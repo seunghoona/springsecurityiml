@@ -2,7 +2,7 @@ package com.inflearn.springsecurityiml.ajax.provider;
 
 import com.inflearn.springsecurityiml.ajax.AjaxAuthenticationToken;
 import com.inflearn.springsecurityiml.domain.AccountContext;
-import com.inflearn.springsecurityiml.service.UserDetailsService;
+import com.inflearn.springsecurityiml.application.service.UserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;

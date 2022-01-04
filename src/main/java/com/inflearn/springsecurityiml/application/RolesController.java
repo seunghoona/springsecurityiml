@@ -1,12 +1,11 @@
-package com.inflearn.springsecurityiml;
+package com.inflearn.springsecurityiml.application;
 
 import com.inflearn.springsecurityiml.domain.Roles;
-import com.inflearn.springsecurityiml.service.RolesService;
-import com.inflearn.springsecurityiml.service.dto.RoleDto;
+import com.inflearn.springsecurityiml.application.service.RolesService;
+import com.inflearn.springsecurityiml.application.service.dto.RoleDto;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;

@@ -6,7 +6,6 @@ import com.inflearn.springsecurityiml.ajax.AjaxLoginUrlAuthenticationEntryPoint;
 import com.inflearn.springsecurityiml.ajax.handler.AjaxAuthenticationFailureHandler;
 import com.inflearn.springsecurityiml.ajax.handler.AjaxAuthenticationSuccessHandler;
 import com.inflearn.springsecurityiml.ajax.provider.AjaxAuthenticationProvider;
-import com.inflearn.springsecurityiml.service.UserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -20,7 +19,6 @@ import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.filter.CharacterEncodingFilter;
 
 @Order(0)
 @Configuration

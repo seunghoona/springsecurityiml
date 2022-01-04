@@ -1,4 +1,4 @@
-package com.inflearn.springsecurityiml.service;
+package com.inflearn.springsecurityiml.application.service;
 
 import com.inflearn.springsecurityiml.domain.Roles;
 import com.inflearn.springsecurityiml.domain.RolesRepo;
@@ -6,7 +6,6 @@ import java.util.List;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Slf4j
