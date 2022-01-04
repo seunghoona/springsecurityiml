@@ -12,6 +12,7 @@ import com.inflearn.springsecurityiml.domain.PasswordService;
 import com.inflearn.springsecurityiml.infrastructure.UserRepository;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.transaction.annotation.Transactional;
 
 @DomainService
@@ -48,5 +49,10 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public void deleteUser(Long id) {
 		userRepository.deleteById(id);
+	}
+	
+	@Secured("ROLE_MANAGER")
+	public void order() {
+		System.out.println("ORDER 호출");
 	}
 }

@@ -9,7 +9,6 @@ import com.inflearn.springsecurityiml.metadatasource.UrlFilterInvocationSecurity
 import com.inflearn.springsecurityiml.provider.CustomAuthenticationProvider;
 import com.inflearn.springsecurityiml.voter.IpAddressVoter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -24,10 +23,10 @@ import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.access.vote.AffirmativeBased;
 import org.springframework.security.access.vote.RoleHierarchyVoter;
-import org.springframework.security.access.vote.RoleVoter;
 import org.springframework.security.authentication.AuthenticationDetailsSource;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -41,12 +40,12 @@ import org.springframework.security.web.authentication.WebAuthenticationDetails;
 
 @Order(1)
 @Configuration
-@EnableWebSecurity(debug = true)
+@EnableWebSecurity
 @RequiredArgsConstructor
-
+@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private static final String [] PERMIT_ALL_URL = {"/","login","/user/login/**"};
+    private static final String[] PERMIT_ALL_URL = {"/", "login", "/user/login/**"};
 
     @Autowired
     private SecurityResourceService securityResourceService;
@@ -121,7 +120,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public PermitAllFilter customFilterSecurityInterceptor() throws Exception {
 
         PermitAllFilter filterSecurityInterceptor = new PermitAllFilter(PERMIT_ALL_URL);
-        filterSecurityInterceptor.setSecurityMetadataSource(urlFilterInvocationSecurityMetaDatasource());
+        filterSecurityInterceptor.setSecurityMetadataSource(
+            urlFilterInvocationSecurityMetaDatasource());
         filterSecurityInterceptor.setAccessDecisionManager(affirmativeBased());
         filterSecurityInterceptor.setAuthenticationManager(authenticationManagerBean());
 
@@ -131,7 +131,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public UrlFilterInvocationSecurityMetaDatasource urlFilterInvocationSecurityMetaDatasource()
         throws Exception {
-        return new UrlFilterInvocationSecurityMetaDatasource(urlResourceMapFactoryBean().getObject(), securityResourceService);
+        return new UrlFilterInvocationSecurityMetaDatasource(
+            urlResourceMapFactoryBean().getObject(), securityResourceService);
     }
 
     @Bean

@@ -491,3 +491,10 @@ public class PermitAllFilter extends FilterSecurityInterceptor {
 - SpringSecurity 는 권한을 전부 가지고있어야만 권한을 가진다고한다. 하지만 상하 관계인 계층 처리를 하고자한다.
 
 ![img_1.png](src/main/resources/img/7-1.png)
+
+
+# 어노테이션 권한 설정 - @PreAuthorize, @PostAuthorize, @Secured, @RolesAllowed
+- Spring Seucrity 에서 어노테이션 인증방식을 사용할수 있다. 
+- 어노테이션 방식은 Aop 방식으로 동작한다. 
+- 실제 사용하려면 `@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)` 를 다음과 같이 설정해야한다. 
+- 실제 내부 동작을 확인하기에 좋은 부분은 `GlobalMehtodSecurityConfiguration` 파일에서 위의 어노테이션에 따라 빈을 생성하고 있다.
