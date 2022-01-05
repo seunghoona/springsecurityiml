@@ -1,6 +1,6 @@
 package com.inflearn.springsecurityiml.provider;
 
-import com.inflearn.springsecurityiml.common.FormWebAuthenctionDetails;
+import com.inflearn.springsecurityiml.common.FormWebAuthenticationDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -36,7 +36,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
     }
 
     private void secretKey(Authentication authentication) {
-        FormWebAuthenctionDetails details = (FormWebAuthenctionDetails) authentication.getDetails();
+        FormWebAuthenticationDetails details = (FormWebAuthenticationDetails) authentication.getDetails();
         String secretKey = details.getSecretKey();
         if (!"secret".equals(secretKey)) {
             throw new InsufficientAuthenticationException("시크릿키가 존재하지 않습니다.");

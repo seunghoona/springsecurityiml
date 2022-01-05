@@ -7,12 +7,13 @@ import com.inflearn.springsecurityiml.factory.UrlResourceMapFactoryBean;
 import com.inflearn.springsecurityiml.handler.CustomAcessDeniedHandler;
 import com.inflearn.springsecurityiml.metadatasource.UrlFilterInvocationSecurityMetaDatasource;
 import com.inflearn.springsecurityiml.provider.CustomAuthenticationProvider;
+import com.inflearn.springsecurityiml.voter.CustomRoleHierarchyVoter;
+import com.inflearn.springsecurityiml.voter.GroupVoter;
 import com.inflearn.springsecurityiml.voter.IpAddressVoter;
 import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,7 +23,6 @@ import org.springframework.security.access.AccessDecisionVoter;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.access.vote.AffirmativeBased;
-import org.springframework.security.access.vote.RoleHierarchyVoter;
 import org.springframework.security.authentication.AuthenticationDetailsSource;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -45,9 +45,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private static final String[] PERMIT_ALL_URL = {"/", "login", "/user/login/**"};
 
-    @Autowired
-    private SecurityResourceService securityResourceService;
-
+    private final SecurityResourceService securityResourceService;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -143,6 +141,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         accessDecisionVoters.add(accessIp());
         accessDecisionVoters.add(roleVoter());
+        accessDecisionVoters.add(groupVoter());
 
         return accessDecisionVoters;
     }
@@ -154,7 +153,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public AccessDecisionVoter<? extends Object> roleVoter() {
-        return new RoleHierarchyVoter(roleHierarchy());
+        return new CustomRoleHierarchyVoter(roleHierarchy());
     }
 
     @Bean
@@ -162,5 +161,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new RoleHierarchyImpl();
     }
 
+    @Bean
+    public AccessDecisionVoter<? extends Object> groupVoter() {
+        return new GroupVoter(roleGroupHierarchy());
+    }
+
+    @Bean
+    public RoleHierarchy roleGroupHierarchy() {
+        return new RoleHierarchyImpl();
+    }
 
 }
