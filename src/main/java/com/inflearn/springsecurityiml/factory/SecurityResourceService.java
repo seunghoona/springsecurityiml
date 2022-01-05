@@ -31,7 +31,20 @@ public class SecurityResourceService {
                 List<ConfigAttribute> configAttributes = new ArrayList<>();
                 re.getRoleSet().forEach(role -> {
                     configAttributes.add(new SecurityConfig(role.getRoleName()));
-                    result.put(new AntPathRequestMatcher(re.getResourceName()), configAttributes);
+                });
+                result.put(new AntPathRequestMatcher(re.getResourceName()), configAttributes);
+            });
+        return result;
+    }
+
+    public LinkedHashMap<String, List<ConfigAttribute>> getMethodResourceList() {
+        LinkedHashMap<String, List<ConfigAttribute>> result = new LinkedHashMap<>();
+        resourceRepository.findAllMethodResources()
+            .forEach(re-> {
+                List<ConfigAttribute> configAttributes = new ArrayList<>();
+                re.getRoleSet().forEach(role -> {
+                    configAttributes.add(new SecurityConfig(role.getRoleName()));
+                    result.put(re.getResourceName(), configAttributes);
                 });
             });
         return result;

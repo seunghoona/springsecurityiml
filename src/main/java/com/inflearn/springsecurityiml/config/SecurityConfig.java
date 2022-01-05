@@ -26,7 +26,6 @@ import org.springframework.security.access.vote.RoleHierarchyVoter;
 import org.springframework.security.authentication.AuthenticationDetailsSource;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -42,7 +41,6 @@ import org.springframework.security.web.authentication.WebAuthenticationDetails;
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
-@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private static final String[] PERMIT_ALL_URL = {"/", "login", "/user/login/**"};
@@ -67,21 +65,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Override
-
-    public void configure(WebSecurity web) throws Exception {
-        web.ignoring()
-            .requestMatchers(PathRequest.toStaticResources().atCommonLocations());
+    public void configure(WebSecurity web) {
+        web.ignoring().requestMatchers(PathRequest.toStaticResources().atCommonLocations())
+            .antMatchers("/static/**");
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
             .authorizeRequests()
-            .antMatchers("/mypage").hasRole("USER")
-            .antMatchers("/messages").hasRole("MANAGER")
-            .antMatchers("/admin").hasRole("ADMIN")
-            .antMatchers("/**").permitAll()
-            .anyRequest().authenticated()
             .and()
             .formLogin()
             .loginPage("/login")
@@ -136,6 +128,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
+    public UrlResourceMapFactoryBean urlResourceMapFactoryBean() {
+        return new UrlResourceMapFactoryBean(securityResourceService);
+    }
+
+    @Bean
     public AccessDecisionManager affirmativeBased() {
         return new AffirmativeBased(getAccessDecisionVoters());
     }
@@ -160,12 +157,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new RoleHierarchyVoter(roleHierarchy());
     }
 
+    @Bean
     public RoleHierarchy roleHierarchy() {
         return new RoleHierarchyImpl();
     }
 
-    @Bean
-    public UrlResourceMapFactoryBean urlResourceMapFactoryBean() {
-        return new UrlResourceMapFactoryBean(securityResourceService);
-    }
+
 }

@@ -1,12 +1,11 @@
 package com.inflearn.springsecurityiml.application;
 
-import com.inflearn.springsecurityiml.domain.Resources;
-import com.inflearn.springsecurityiml.domain.Roles;
-import com.inflearn.springsecurityiml.domain.RolesRepo;
 import com.inflearn.springsecurityiml.application.service.ResourceService;
 import com.inflearn.springsecurityiml.application.service.RolesService;
 import com.inflearn.springsecurityiml.application.service.dto.ResourcesDto;
-import com.inflearn.springsecurityiml.factory.SecurityResourceService;
+import com.inflearn.springsecurityiml.domain.Resources;
+import com.inflearn.springsecurityiml.domain.Roles;
+import com.inflearn.springsecurityiml.domain.RolesRepo;
 import com.inflearn.springsecurityiml.metadatasource.UrlFilterInvocationSecurityMetaDatasource;
 import java.util.HashSet;
 import java.util.List;
@@ -23,17 +22,16 @@ import org.springframework.web.bind.annotation.PostMapping;
 @RequiredArgsConstructor
 public class ResourceController {
 
-    private ResourceService resourcesService;
+    private final ResourceService resourcesService;
 
-    private RolesRepo roleRepository;
+    private final RolesRepo roleRepository;
 
-    private RolesService roleService;
+    private final RolesService roleService;
 
-    private UrlFilterInvocationSecurityMetaDatasource urlFilterInvocationSecurityMetaDatasource;
-
+    private final UrlFilterInvocationSecurityMetaDatasource urlFilterInvocationSecurityMetaDatasource;
 
     @GetMapping(value="/admin/resources")
-    public String getResources(Model model) throws Exception {
+    public String getResources(Model model) {
 
         List<Resources> resources = resourcesService.selectResources();
         model.addAttribute("resources", resources);
@@ -42,7 +40,7 @@ public class ResourceController {
     }
 
     @PostMapping(value="/admin/resources")
-    public String createResources(ResourcesDto resourcesDto) throws Exception {
+    public String createResources(ResourcesDto resourcesDto) {
 
         ModelMapper modelMapper = new ModelMapper();
         Roles role = roleRepository.findByRoleName(resourcesDto.getRoleName());
@@ -57,7 +55,7 @@ public class ResourceController {
     }
 
     @GetMapping(value="/admin/resources/register")
-    public String viewRoles(Model model) throws Exception {
+    public String viewRoles(Model model) {
 
         List<Roles> roleList = roleService.getRoles();
         urlFilterInvocationSecurityMetaDatasource.reload();
@@ -69,7 +67,7 @@ public class ResourceController {
     }
 
     @GetMapping(value="/admin/resources/{id}")
-    public String getResources(@PathVariable String id, Model model) throws Exception {
+    public String getResources(@PathVariable String id, Model model) {
 
         List<Roles> roleList = roleService.getRoles();
         model.addAttribute("roleList", roleList);
@@ -89,5 +87,4 @@ public class ResourceController {
 
         return "redirect:/admin/resources";
     }
-
 }

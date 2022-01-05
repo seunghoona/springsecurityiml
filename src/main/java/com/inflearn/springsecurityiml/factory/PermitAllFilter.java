@@ -60,7 +60,7 @@ public class PermitAllFilter extends FilterSecurityInterceptor {
         HttpServletRequest request = ((FilterInvocation) object).getRequest();
 
         if (requestMatchers.stream()
-            .anyMatch(s->s.matches(request))) {
+            .anyMatch(s -> s.matches(request))) {
             isPermitAll = true;
         }
 

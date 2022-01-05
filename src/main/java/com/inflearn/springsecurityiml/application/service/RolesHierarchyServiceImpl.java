@@ -25,7 +25,7 @@ public class RolesHierarchyServiceImpl implements RolesHierarchyService {
                 stringBuilder.append(rolesHierarchy.getParentName().getChildName());
                 stringBuilder.append(" > ");
                 stringBuilder.append(rolesHierarchy.getChildName());
-                stringBuilder.append(" > ");
+                stringBuilder.append("\n");
             }
         }
 

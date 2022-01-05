@@ -63,27 +63,31 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
 
     private void setupSecurityResources() {
 
-        Set<Roles> roles = new HashSet<>();
-        Roles adminRole = createRoleIfNotFound("ROLE_ADMIN", "관리자");
-        roles.add(adminRole);
+        Set<Roles> adminRoles = new HashSet<>();
+        Roles adminRole   = createRoleIfNotFound("ROLE_ADMIN", "관리자");
+        adminRoles.add(adminRole);
 
-        createUserIfNotFound("admin", "pass", "admin@gmail.com", 10, roles);
+        createUserIfNotFound("admin", "pass", "admin@gmail.com", 10, adminRoles);
 
-        Set<Roles> roles1 = new HashSet<>();
+        Set<Roles> managerRoles = new HashSet<>();
         Roles managerRole = createRoleIfNotFound("ROLE_MANAGER", "매니저");
-        roles1.add(managerRole);
+        managerRoles.add(managerRole);
 
-        createUserIfNotFound("manager", "pass", "manager@gmail.com", 20, roles1);
+        createUserIfNotFound("manager", "pass", "manager@gmail.com", 20, managerRoles);
+
+        Set<Roles> userRoles = new HashSet<>();
+        Roles userRole = createRoleIfNotFound("ROLE_USER", "회원");
+        userRoles.add(userRole);
+
+        createUserIfNotFound("user", "pass", "user@gmail.com", 30, userRoles);
+
+
         createRoleHierarchyIfNotFound(managerRole, adminRole);
+        createRoleHierarchyIfNotFound(userRole, managerRole);
 
-        Set<Roles> roles3 = new HashSet<>();
-        Roles childRole1 = createRoleIfNotFound("ROLE_USER", "회원");
-        roles3.add(childRole1);
-
-        createUserIfNotFound("user", "pass", "user@gmail.com", 30, roles3);
-        createRoleHierarchyIfNotFound(childRole1, managerRole);
-
-        createResourceIfNotFound("/admin/**", "", roles, "url");
+        createResourceIfNotFound("/admin/**", "", adminRoles, "url");
+        createResourceIfNotFound("/messages", "", managerRoles, "url");
+        createResourceIfNotFound("/mypage", "", userRoles, "url");
 
     }
 
@@ -159,10 +163,10 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
     }
 
     private void setupAccessIpData() {
-        AccessIP byIpAddress = accessIpRepository.findByIpAddress("127.0.0.1");
+        AccessIP byIpAddress = accessIpRepository.findByIpAddress("0:0:0:0:0:0:0:1");
         if (byIpAddress == null) {
             AccessIP accessIp = AccessIP.builder()
-                .ipAddress("127.0.0.1")
+                .ipAddress("0:0:0:0:0:0:0:1")
                 .build();
             accessIpRepository.save(accessIp);
         }

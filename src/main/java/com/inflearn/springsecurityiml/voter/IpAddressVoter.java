@@ -4,6 +4,7 @@ import com.inflearn.springsecurityiml.factory.SecurityResourceService;
 import java.util.Collection;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.AccessDecisionVoter;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.ConfigAttribute;
@@ -11,6 +12,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 
 @RequiredArgsConstructor
+@Slf4j
 public class IpAddressVoter implements AccessDecisionVoter<Object> {
 
     private final SecurityResourceService resourceService;
@@ -35,14 +37,14 @@ public class IpAddressVoter implements AccessDecisionVoter<Object> {
 
         List<String> accessIps = resourceService.getAccessIp();
 
-        accessIps.stream()
-            .map(s -> s.equals(remoteAddress) ? ACCESS_ABSTAIN : ACCESS_DENIED)
-            .findAny()
-            .ifPresent(s -> {
-                if (s == ACCESS_DENIED) {
-                    throw new AccessDeniedException("잘못된 IP 정보입니다.");
-                }
-            });
-        return ACCESS_ABSTAIN;
+        log.debug("IP 정보 : {}", remoteAddress);
+
+        for (String accessIp : accessIps) {
+            if (accessIp.equals(remoteAddress)) {
+                return ACCESS_ABSTAIN;
+            }
+        }
+
+        throw new AccessDeniedException("잘못된 IP 정보입니다.");
     }
 }

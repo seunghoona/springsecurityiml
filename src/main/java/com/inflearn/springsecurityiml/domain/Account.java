@@ -43,9 +43,6 @@ public class Account {
 	@Column
 	private int age;
 
-	@Embedded
-	private Role role;
-
 	@ManyToMany(fetch = FetchType.LAZY, cascade={CascadeType.ALL})
 	@JoinTable(name = "account_roles", joinColumns = { @JoinColumn(name = "user_id") }, inverseJoinColumns = {
 		@JoinColumn(name = "role_id") })
@@ -58,7 +55,6 @@ public class Account {
 		this.password = passwordService.encode(new Password(accountDto.getPassword()));
 		this.email = accountDto.getEmail();
 		this.age = accountDto.getAge();
-		this.role = new Role(accountDto.getRole());
 	}
 
 }

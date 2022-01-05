@@ -33,12 +33,12 @@ public class UrlFilterInvocationSecurityMetaDatasource implements
         HttpServletRequest request = ((FilterInvocation) object).getRequest();
 
         if (requestMap != null) {
-            return requestMap.entrySet()
-                .stream()
-                .filter(s -> s.getKey().matches(request))
-                .map(Entry::getValue)
-                .findFirst()
-                .orElse(null);
+            for (Entry<RequestMatcher, List<ConfigAttribute>> entry : requestMap.entrySet()) {
+                RequestMatcher key = entry.getKey();
+                if (key.matches(request)) {
+                    return entry.getValue();
+                }
+            }
         }
 
         return null;

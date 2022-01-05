@@ -22,13 +22,13 @@ public class UserServiceImpl implements UserService {
 	private final UserRepository userRepository;
 	private final PasswordService passwordService;
 
-	public void createUser(AccountDto account) {
-		userRepository.save(new Account(account,passwordService));
+	public void createUser(AccountDto accountDto) {
+		userRepository.save(new Account(accountDto, passwordService));
 	}
 
 	@Transactional
 	public UserDto getUser(Long id) {
-		Account account = userRepository.findById(id).orElse(new Account(new AccountDto(), passwordService));
+		Account account = userRepository.findById(id).orElse(null);
 		ModelMapper modelMapper = new ModelMapper();
 		UserDto userDto = modelMapper.map(account, UserDto.class);
 

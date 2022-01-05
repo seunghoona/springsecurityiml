@@ -5,15 +5,17 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
+import org.springframework.stereotype.Component;
 
 @RequiredArgsConstructor
-public class SeucrityInitializaer implements ApplicationRunner {
+@Component
+public class SecurityInitializer implements ApplicationRunner {
 
     private final RolesHierarchyService rolesHierarchyService;
     private final RoleHierarchyImpl roleHierarchy;
 
     @Override
-    public void run(ApplicationArguments args) throws Exception {
+    public void run(ApplicationArguments args) {
         String roleHierarchy = rolesHierarchyService.createRoleHierarchy();
         this.roleHierarchy.setHierarchy(roleHierarchy);
     }

@@ -61,7 +61,7 @@ public class UserContoller {
     @GetMapping("/denied")
     public String accessDenied(
         @RequestParam(value = "exception", required = false) String exception, Model model) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        SecurityContextHolder.getContext().getAuthentication();
         model.addAttribute("exception", exception);
         return "user/login/denied";
     }
